@@ -157,6 +157,7 @@ docker run -d -p 3000:80 wsb-docker-task:<tag_name>
 * Version your images (e.g., `1.0.0`, `2.0.0`)
 * Scan images for vulnerabilities: `docker scan <image>`
 * Keep dependencies up-to-date: `npm outdated && npm update`
-* **Scan Docker images for vulnerabilities before production**
+* **Docker image vulnerabilities can be checked using Trivy or Docker Desktop image scanning in VS Code.
+ before production**
 
 ---
