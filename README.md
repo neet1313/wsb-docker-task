@@ -13,7 +13,7 @@ This documentation explains how to build and run your **React application** with
 5. [Building the Docker Image](#building-the-docker-image)
 6. [Running the Container](#running-the-container)
 7. [Updating the Image](#updating-the-image)
-8. [SPA Routing Support](#spa-routing-support)
+8. [Image Size Improvements](#image-size-improvements)
 9. [Best Practices](#best-practices)
 
 ---
@@ -25,7 +25,7 @@ This documentation explains how to build and run your **React application** with
 
 **Benefits:**
 
-* Small image (~50 MB)
+* Small image (~73 MB)
 * No dev dependencies in production
 * Optimized caching for faster builds
 * Ready for deployment
@@ -126,11 +126,25 @@ docker run -d -p 3000:80 wsb-docker-task:2.0.0
 * When making changes:
 
 ```bash
-docker build -t wsb-docker-task:2.1.0 .
-docker run -d -p 3000:80 wsb-docker-task:2.1.0
+docker build -t wsb-docker-task:<tag_name> .
+docker run -d -p 3000:80 wsb-docker-task:<tag_name>
 ```
 
 * Keep old versions for rollback
+
+---
+
+## Image Size Improvements
+
+| Version | Description                        | Size  |
+|---------|------------------------------------|-------|
+| 1.0.0   | Development image with Node & dev dependencies | 585 MB |
+| 2.0.0   | Production-optimized image with multi-stage build & Nginx | 73 MB |
+
+**Notes:**  
+- Multi-stage builds remove dev dependencies from the final image  
+- Nginx replaces Node dev server for serving static React build  
+- Smaller image → faster deployment, lower storage & security risks
 
 ---
 
@@ -143,5 +157,6 @@ docker run -d -p 3000:80 wsb-docker-task:2.1.0
 * Version your images (e.g., `1.0.0`, `2.0.0`)
 * Scan images for vulnerabilities: `docker scan <image>`
 * Keep dependencies up-to-date: `npm outdated && npm update`
+* **Scan Docker images for vulnerabilities before production**
 
 ---
