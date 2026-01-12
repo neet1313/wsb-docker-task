@@ -1,5 +1,7 @@
+#Stage 1: Build the application
+
 # Use the official Node.js 25 Alpine image (small and lightweight)
-FROM node:25-alpine
+FROM node:25-alpine AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -13,8 +15,18 @@ RUN npm install
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Expose port 3000 for the application
-EXPOSE 3000
+# Build the application
+RUN npm run build
 
-# Start the application
-CMD ["npm", "start"]
+#-------------------------------------------------------------------------------#
+# Stage 2: Serve app with nginx server
+FROM nginx:alpine
+
+# Copy the built application from the previous stage to the nginx html directory
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose port 80 to the outside world
+EXPOSE 80
+
+# Start nginx when the container launches with daemon off
+CMD ["nginx", "-g", "daemon off;"]
